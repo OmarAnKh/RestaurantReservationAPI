@@ -1,9 +1,9 @@
-using System.Reflection;
 using RestaurantReservation.Db;
 using RestaurantReservation.Db.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddControllers();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddScoped<CustomerRepository>();
 builder.Services.AddScoped<OrderRepository>();
 builder.Services.AddScoped<OrderItemRepository>();
