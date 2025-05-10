@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# 
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantReservationAPI", "RestaurantReservationAPI\RestaurantReservationAPI.csproj", "{3096C40A-2ACA-42BA-9F0D-71EB2AE973DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantReservation.Db", "..\..\ORM\RestaurantReservationCore\RestaurantReservation.Db\RestaurantReservation.Db.csproj", "{A9F6A6FE-488D-4634-8FCF-9C31E96A56DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantReservation.Domain", "..\..\ORM\RestaurantReservationCore\RestaurantReservation.Domain\RestaurantReservation.Domain.csproj", "{B8729323-0238-46CC-AF3C-9CA4116E101E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3096C40A-2ACA-42BA-9F0D-71EB2AE973DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3096C40A-2ACA-42BA-9F0D-71EB2AE973DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3096C40A-2ACA-42BA-9F0D-71EB2AE973DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3096C40A-2ACA-42BA-9F0D-71EB2AE973DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9F6A6FE-488D-4634-8FCF-9C31E96A56DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9F6A6FE-488D-4634-8FCF-9C31E96A56DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9F6A6FE-488D-4634-8FCF-9C31E96A56DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9F6A6FE-488D-4634-8FCF-9C31E96A56DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8729323-0238-46CC-AF3C-9CA4116E101E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8729323-0238-46CC-AF3C-9CA4116E101E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8729323-0238-46CC-AF3C-9CA4116E101E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8729323-0238-46CC-AF3C-9CA4116E101E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
