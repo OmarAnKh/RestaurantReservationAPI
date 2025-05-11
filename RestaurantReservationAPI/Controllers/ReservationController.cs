@@ -19,7 +19,7 @@ public class ReservationController : ControllerBase
     private readonly IRestaurantRepository _restaurantRepository;
     private readonly ICustomerRepository _customerRepository;
     private readonly IMapper _mapper;
-    private const int _maxPageSize = 20;
+    private const int MaxPageSize = 20;
     /// <summary>
     /// the reservation controller constructor
     /// </summary>
@@ -43,9 +43,9 @@ public class ReservationController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ReservationDto>>> GetReservations(int pageNumber = 1, int pageSize = 10)
     {
-        if (pageSize is > _maxPageSize or < 1)
+        if (pageSize is > MaxPageSize or < 1)
         {
-            pageSize = _maxPageSize;
+            pageSize = MaxPageSize;
         }
         var (reservationEntities, paginationMetaData) = await _reservationRepository.GetAllAsync(string.Empty, string.Empty, pageNumber, pageSize);
         Response.Headers.Append("X-Pagination",
@@ -100,7 +100,7 @@ public class ReservationController : ControllerBase
         await _reservationRepository.AddAsync(reservationEntity);
         return Ok(_mapper.Map<ReservationDto>(reservationEntity));
     }
-    
+
     /// <summary>
     /// Update reservation  
     /// </summary>

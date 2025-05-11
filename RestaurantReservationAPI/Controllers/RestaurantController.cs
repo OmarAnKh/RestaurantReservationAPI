@@ -2,7 +2,6 @@ using System.Text.Json;
 using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using RestaurantReservation.Db.Repositories;
 using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservation.Domain;
 using RestaurantReservationAPI.Models.Restaurant;
@@ -109,7 +108,13 @@ public class RestaurantController : ControllerBase
         await _restaurantRepository.SaveChangesAsync();
         return NoContent();
     }
-
+    /// <summary>
+    /// Delete a restaurant
+    /// </summary>
+    /// <param name="id"> the id of the restaurant you want to delete</param>
+    /// not found when could not find the restaurant   
+    /// no content if succeed
+    /// <returns></returns>
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteRestaurant(int id)
     {

@@ -4,7 +4,7 @@ using RestaurantReservationAPI.Models.Restaurant;
 
 namespace RestaurantReservationAPI.Profiles;
 
-public class RestaurantProfile:Profile
+public class RestaurantProfile : Profile
 {
     public RestaurantProfile()
     {

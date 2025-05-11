@@ -34,10 +34,10 @@ public class CustomerController : ControllerBase
     /// <summary>
     ///     Get all Customers, split into pages
     /// </summary>
-    /// <param email="email">email to find</param>
-    /// <param email="searchQuery">something to search for in the firstname lastname or email</param>
-    /// <param email="pageNumber">the page number you want</param>
-    /// <param email="pageSize">the page size you want (the max page size is 20 and the default is 10)</param>
+    /// <param name="email">email to find</param>
+    /// <param name="searchQuery">something to search for in the firstname lastname or email</param>
+    /// <param name="pageNumber">the page number you want</param>
+    /// <param name="pageSize">the page size you want (the max page size is 20 and the default is 10)</param>
     /// <returns>a list of customers and a pagination info in the header</returns>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CustomerWithoutReservationsDto>>> GetCustomers(string? email, string? searchQuery, int pageNumber = 1, int pageSize = 10)

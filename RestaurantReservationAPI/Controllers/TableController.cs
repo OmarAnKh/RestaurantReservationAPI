@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservation.Domain;
-using RestaurantReservationAPI.Models.Restaurant;
 using RestaurantReservationAPI.Models.TableDto;
 
 namespace RestaurantReservationAPI.Controllers;
@@ -19,14 +18,14 @@ public class TableController : ControllerBase
     private readonly IMapper _mapper;
     private readonly ITableRepository _tableRepository;
     private readonly IRestaurantRepository _restaurantRepository;
-    private const int _maxPageSize = 20;
+    private const int MaxPageSize = 20;
     /// <summary>
     /// The Table Controller Constructor
     /// </summary>
     /// <param name="tableRepository">The Table repository you want to use (inherit the class and implement it if you want the method to work in different way)</param>
     /// <param name="restaurantRepository">The restaurant repository we want to use </param>
     /// <param name="mapper">The mapper to map the Dto</param>
-    public TableController(ITableRepository tableRepository,IRestaurantRepository restaurantRepository, IMapper mapper)
+    public TableController(ITableRepository tableRepository, IRestaurantRepository restaurantRepository, IMapper mapper)
     {
         _tableRepository = tableRepository;
         _mapper = mapper;
@@ -41,16 +40,16 @@ public class TableController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<TableWithoutRelationsDto>>> GetTablesAsync(int page = 1, int pageSize = 20)
     {
-        if (pageSize > _maxPageSize)
+        if (pageSize > MaxPageSize)
         {
-            pageSize = _maxPageSize;
+            pageSize = MaxPageSize;
         }
-        var (TableEntities, paginationMetaData) = await _tableRepository.GetAllAsync(string.Empty, string.Empty, page, pageSize);
+        var (tableEntities, paginationMetaData) = await _tableRepository.GetAllAsync(string.Empty, string.Empty, page, pageSize);
         Response.Headers.Append("X-Pagination",
             JsonSerializer.Serialize(paginationMetaData));
-        return Ok(_mapper.Map<IEnumerable<TableWithoutRelationsDto>>(TableEntities));
+        return Ok(_mapper.Map<IEnumerable<TableWithoutRelationsDto>>(tableEntities));
     }
-    
+
     /// <summary>
     /// Get a specific table via the table id
     /// </summary>
@@ -81,7 +80,7 @@ public class TableController : ControllerBase
         }
         var tableEntity = _mapper.Map<Table>(tableCreationDto);
         await _tableRepository.AddAsync(tableEntity);
-        return  Ok(_mapper.Map<TableDto>(tableEntity));
+        return Ok(_mapper.Map<TableDto>(tableEntity));
     }
     /// <summary>
     /// Update table info
@@ -116,6 +115,14 @@ public class TableController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Delete a table
+    /// </summary>
+    /// <param name="id"> the id of the table you want to delete</param>
+    /// <returns>
+    /// not found, when could not find the Table   
+    /// no content, if succeed
+    /// </returns>
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteTableAsync(int id)
     {

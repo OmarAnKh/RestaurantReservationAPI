@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservation.Domain;
-using RestaurantReservationAPI.Models;
 using RestaurantReservationAPI.Models.MenuItemDto;
 
 namespace RestaurantReservationAPI.Controllers;
@@ -19,7 +18,7 @@ public class MenuItemController : ControllerBase
     private readonly IMenuItemRepository _menuItemRepository;
     private readonly IRestaurantRepository _restaurantRepository;
     private readonly IMapper _mapper;
-    private const int _maxPageSize = 20;
+    private const int MaxPageSize = 20;
     /// <summary>
     /// Menu item controller constructor
     /// </summary>
@@ -45,9 +44,9 @@ public class MenuItemController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MenuItemDto>>> GetMenuItems(string? name, string? searchQuery, int pageNumber = 1, int pageSize = 10)
     {
-        if (pageSize is < 1 or > _maxPageSize)
+        if (pageSize is < 1 or > MaxPageSize)
         {
-            pageSize = _maxPageSize;
+            pageSize = MaxPageSize;
         }
         var (menuItemEntities, paginationMetaData) = await _menuItemRepository.GetAllAsync(name, searchQuery, pageNumber, pageSize);
         Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetaData));
@@ -116,7 +115,14 @@ public class MenuItemController : ControllerBase
         await _menuItemRepository.SaveChangesAsync();
         return NoContent();
     }
-
+    /// <summary>
+    /// Delete A menu item
+    /// </summary>
+    /// <param name="id"> The id of the item you want to delete</param>
+    /// <returns>
+    /// not found when could not find the Item   
+    /// no content if succeed
+    /// </returns>
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteMenuItem(int id)
     {
