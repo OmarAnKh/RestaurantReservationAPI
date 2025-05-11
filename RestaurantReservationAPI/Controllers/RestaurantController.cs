@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantReservation.Db.Repositories;
+using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservation.Domain;
 using RestaurantReservationAPI.Models.Restaurant;
 using RestaurantReservationAPI.Services;
@@ -16,16 +17,17 @@ namespace RestaurantReservationAPI.Controllers;
 [ApiController]
 public class RestaurantController : ControllerBase
 {
+    private readonly IRestaurantRepository _restaurantRepository;
     private readonly IMapper _mapper;
     private readonly int _maxPageSize = 20;
-    private readonly RestaurantRepository _restaurantRepository;
+
 
     /// <summary>
     ///     Restaurant Controller constructor
     /// </summary>
     /// <param name="restaurantRepository"></param>
     /// <param name="mapper"></param>
-    public RestaurantController(RestaurantRepository restaurantRepository, IMapper mapper)
+    public RestaurantController(IRestaurantRepository restaurantRepository, IMapper mapper)
     {
         _restaurantRepository = restaurantRepository;
         _mapper = mapper;
@@ -80,7 +82,7 @@ public class RestaurantController : ControllerBase
         return CreatedAtAction("GetRestaurant", new { id = restaurantDto.RestaurantId }, restaurantDto);
     }
     /// <summary>
-    /// Update a restaurant info 
+    ///     Update a restaurant info
     /// </summary>
     /// <param name="id">The id of the restaurant</param>
     /// <param name="patchDocument">The new values</param>

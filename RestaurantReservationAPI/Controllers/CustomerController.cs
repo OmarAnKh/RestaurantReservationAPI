@@ -2,7 +2,7 @@ using System.Text.Json;
 using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using RestaurantReservation.Db.Repositories;
+using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservation.Domain;
 using RestaurantReservationAPI.Models.Customer;
 using RestaurantReservationAPI.Services;
@@ -16,15 +16,16 @@ namespace RestaurantReservationAPI.Controllers;
 [ApiController]
 public class CustomerController : ControllerBase
 {
-    private const int MaxCustomersPageSize = 20;
-    private readonly CustomerRepository _customerRepository;
+    private readonly ICustomerRepository _customerRepository;
     private readonly IMapper _mapper;
+    private const int MaxCustomersPageSize = 20;
+
     /// <summary>
     ///     The Customer Controller Constructor
     /// </summary>
     /// <param name="customerRepository"></param>
     /// <param name="mapper"></param>
-    public CustomerController(CustomerRepository customerRepository, IMapper mapper)
+    public CustomerController(ICustomerRepository customerRepository, IMapper mapper)
     {
         _customerRepository = customerRepository;
         _mapper = mapper;

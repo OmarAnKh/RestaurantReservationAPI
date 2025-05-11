@@ -2,16 +2,15 @@ using AutoMapper;
 using RestaurantReservation.Domain;
 using RestaurantReservationAPI.Models.Customer;
 
-namespace RestaurantReservationAPI.Profiles
+namespace RestaurantReservationAPI.Profiles;
+
+public class CustomerProfile : Profile
 {
-    public class CustomerProfile : Profile
+    public CustomerProfile()
     {
-        public CustomerProfile()
-        {
-            CreateMap<CustomerCreationDto, Customer>();
-            CreateMap<Customer,CustomerWithoutReservationsDto>();
-            CreateMap<Customer, CustomerUpdateDto>();
-            CreateMap<CustomerUpdateDto, Customer>();
-        }
+        CreateMap<CustomerCreationDto, Customer>();
+        CreateMap<Customer,CustomerWithoutReservationsDto>();
+        CreateMap<Customer, CustomerUpdateDto>();
+        CreateMap<CustomerUpdateDto, Customer>();
     }
 }
