@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantReservation.Db.Repositories.Interfaces;
 using RestaurantReservation.Domain;
+using RestaurantReservationAPI.Models.MenuItemDto;
+using RestaurantReservationAPI.Models.OrderDto;
 using RestaurantReservationAPI.Models.ReservationDto;
 
 namespace RestaurantReservationAPI.Controllers;
@@ -18,6 +20,7 @@ public class ReservationController : ControllerBase
     private readonly IReservationRepository _reservationRepository;
     private readonly IRestaurantRepository _restaurantRepository;
     private readonly ICustomerRepository _customerRepository;
+    private readonly IOrderRepository _orderRepository;
     private readonly IMapper _mapper;
     private const int MaxPageSize = 20;
     /// <summary>
@@ -27,12 +30,13 @@ public class ReservationController : ControllerBase
     /// <param name="mapper"> IMapper to make the Dtos</param>
     /// <param name="restaurantRepository">The restaurant repository you want to use</param>
     /// <param name="customerRepository">The customer repository you want to use </param>
-    public ReservationController(IReservationRepository reservationRepository, IMapper mapper, IRestaurantRepository restaurantRepository, ICustomerRepository customerRepository)
+    public ReservationController(IReservationRepository reservationRepository, IMapper mapper, IRestaurantRepository restaurantRepository, ICustomerRepository customerRepository, IOrderRepository orderRepository)
     {
         _reservationRepository = reservationRepository;
         _mapper = mapper;
         _restaurantRepository = restaurantRepository;
         _customerRepository = customerRepository;
+        _orderRepository = orderRepository;
     }
     /// <summary>
     /// Get Reservations paginated
@@ -145,5 +149,70 @@ public class ReservationController : ControllerBase
         }
         await _reservationRepository.DeleteAsync(id);
         return NoContent();
+    }
+
+
+    /// <summary>
+    /// Get the reservation fo a customer
+    /// </summary>
+    /// <param name="customerId">the customer id</param>
+    /// <returns></returns>
+    [HttpGet("customer/{customerId}")]
+    public async Task<IActionResult> GetReservationsByCustomer(int customerId)
+    {
+        var reservations = await _reservationRepository.GetReservationsByCustomerAsync(customerId);
+
+        if (reservations == null || reservations.Count == 0)
+        {
+            return NotFound($"No reservations found for customer with ID {customerId}.");
+        }
+
+        return Ok(_mapper.Map<IEnumerable<ReservationDto>>(reservations));
+    }
+
+
+    /// <summary>
+    /// Retrieves all reservations along with their associated customer and restaurant details.
+    /// </summary>
+    /// <returns>A list of reservations including customer and restaurant information.</returns>
+    /// <response code="200">Returns the list of reservations.</response>
+    [HttpGet("with-customer-and-restaurant")]
+    public async Task<ActionResult<List<ReservationsWithCustomerAndRestaurant>>> GetReservationsWithCustomerAndRestaurant()
+    {
+        var result = await _reservationRepository.ListReservationsWithCustomerAsync();
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Retrieves a list of customers who had reservations with a party size greater than the specified value.
+    /// </summary>
+    /// <param name="partySize">The minimum party size to filter customers.</param>
+    /// <returns>A list of customers with reservations larger than the given party size.</returns>
+    /// <response code="200">Returns the list of customers.</response>
+    /// <response code="400">If the party size is less than or equal to zero.</response>
+    [HttpGet("customers-by-party-size/{partySize}")]
+    public async Task<ActionResult<List<ReservationCustomerDto>>> GetReservationCustomersByPartySize(int partySize)
+    {
+        if (partySize <= 0)
+        {
+            return BadRequest("Party size must be greater than zero.");
+        }
+
+        var result = await _reservationRepository.ListReservationCustomersAsync(partySize);
+        return Ok(result);
+    }
+
+    [HttpGet("{reservationId}/orders")]
+    public async Task<ActionResult<IEnumerable<OrderDto>>> GetReservationOrders(int reservationId)
+    {
+        var OrdersAndMenuItem = await _orderRepository.ListOrdersAndMenuItemsAsync(reservationId);
+        return Ok(_mapper.Map<IEnumerable<OrderDto>>(OrdersAndMenuItem));
+    }
+
+    [HttpGet("{reservationId}/menu-items")]
+    public async Task<ActionResult<IEnumerable<MenuItemDto>>> GetReservationMenuItems(int reservationId)
+    {
+        var menuItem = await _orderRepository.ListOrderedMenuItemsAsync(reservationId);
+        return Ok(_mapper.Map<IEnumerable<MenuItemDto>>(menuItem));
     }
 }

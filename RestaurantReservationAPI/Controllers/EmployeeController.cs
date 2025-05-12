@@ -17,6 +17,7 @@ public class EmployeeController : ControllerBase
 {
     private readonly IEmployeeRepository _employeeRepository;
     private readonly IRestaurantRepository _restaurantRepository;
+    private readonly IOrderRepository _orderRepository;
     private readonly IMapper _mapper;
     private const int MaxPageSize = 20;
     /// <summary>
@@ -25,11 +26,12 @@ public class EmployeeController : ControllerBase
     /// <param name="employeeRepository">The Employee repository you want to use</param>
     /// <param name="restaurantRepository">The restaurant repository you want to use</param>
     /// <param name="mapper">the mapper to map data between Dtos</param>
-    public EmployeeController(IEmployeeRepository employeeRepository, IRestaurantRepository restaurantRepository, IMapper mapper)
+    public EmployeeController(IEmployeeRepository employeeRepository, IRestaurantRepository restaurantRepository, IMapper mapper, IOrderRepository orderRepository)
     {
         _employeeRepository = employeeRepository;
         _restaurantRepository = restaurantRepository;
         _mapper = mapper;
+        _orderRepository = orderRepository;
     }
     /// <summary>
     /// Get List Of employees that is paginated
@@ -141,5 +143,28 @@ public class EmployeeController : ControllerBase
         }
         await _employeeRepository.DeleteAsync(id);
         return NoContent();
+    }
+    /// <summary>
+    /// Return a list of all managers
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("managers")]
+    public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetManagers()
+    {
+        var managers = await _employeeRepository.GetManagersAsync();
+        var managersDto = _mapper.Map<IEnumerable<EmployeeDto>>(managers);
+        return Ok(managersDto);
+    }
+
+    [HttpGet("{employeeId}/average-order-amount")]
+    public async Task<ActionResult<double>> GetAverageOrderAmount(int employeeId)
+    {
+        var employee = await _employeeRepository.GetByIdAsync(employeeId);
+        if (employee is null)
+        {
+            return NotFound();
+        }
+        var avgOrderAmountForAnEmployee = await _orderRepository.CalculateAverageOrderAmountAsync(employeeId);
+        return Ok(avgOrderAmountForAnEmployee);
     }
 }
