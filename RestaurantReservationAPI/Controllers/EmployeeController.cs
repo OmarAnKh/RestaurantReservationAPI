@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantReservation.Db.Repositories.Interfaces;
@@ -13,6 +14,8 @@ namespace RestaurantReservationAPI.Controllers;
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
+
 public class EmployeeController : ControllerBase
 {
     private readonly IEmployeeRepository _employeeRepository;
@@ -155,7 +158,11 @@ public class EmployeeController : ControllerBase
         var managersDto = _mapper.Map<IEnumerable<EmployeeDto>>(managers);
         return Ok(managersDto);
     }
-
+    /// <summary>
+    /// Get the Average order amount for a specific employee
+    /// </summary>
+    /// <param name="employeeId">the employee you want</param>
+    /// <returns></returns>
     [HttpGet("{employeeId}/average-order-amount")]
     public async Task<ActionResult<double>> GetAverageOrderAmount(int employeeId)
     {

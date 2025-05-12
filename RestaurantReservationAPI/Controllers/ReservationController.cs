@@ -1,5 +1,6 @@
 using System.Text.Json;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantReservation.Db.Repositories.Interfaces;
@@ -15,6 +16,8 @@ namespace RestaurantReservationAPI.Controllers;
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
+
 public class ReservationController : ControllerBase
 {
     private readonly IReservationRepository _reservationRepository;
@@ -201,14 +204,22 @@ public class ReservationController : ControllerBase
         var result = await _reservationRepository.ListReservationCustomersAsync(partySize);
         return Ok(result);
     }
-
+    /// <summary>
+    /// The orders with their menu items for a specific reservation
+    /// </summary>
+    /// <param name="reservationId">The id of the reservation you want</param>
+    /// <returns></returns>
     [HttpGet("{reservationId}/orders")]
     public async Task<ActionResult<IEnumerable<OrderDto>>> GetReservationOrders(int reservationId)
     {
         var OrdersAndMenuItem = await _orderRepository.ListOrdersAndMenuItemsAsync(reservationId);
         return Ok(_mapper.Map<IEnumerable<OrderDto>>(OrdersAndMenuItem));
     }
-
+    /// <summary>
+    /// get the menu items for a specific reservation
+    /// </summary>
+    /// <param name="reservationId">the id for the reservation you want</param>
+    /// <returns></returns>
     [HttpGet("{reservationId}/menu-items")]
     public async Task<ActionResult<IEnumerable<MenuItemDto>>> GetReservationMenuItems(int reservationId)
     {
